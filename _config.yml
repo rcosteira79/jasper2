@@ -1,6 +1,9 @@
 # Jekyll configuration
 markdown: kramdown
-highlighter: rouge
+highlighter: none
+kramdown:
+   syntax_highlighter_opts:
+      disable : true
 paginate: 100 # it will paginate after this number
 language: 'en-uk'
 words_per_minute: 200

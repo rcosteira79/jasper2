@@ -45,11 +45,13 @@ into the {body} of the default.hbs template -->
             </header>
 
             {% if page.cover %}
-            <figure class="post-full-image" style="background-image: url({{ site.baseurl }}{{ page.cover }})">
+            <div class="post-full-image-caption">
+                <figure class="post-full-image" style="background-image: url({{ site.baseurl }}{{ page.cover }})"></figure>
                 {% if page.cover_caption %}
-                    <figcaption>{{ page.cover_caption }} Photo by <a href="{{page.cover_author_url}}">{{page.cover_author}}</a> on <a href="{{page.cover_source_ulr}}">{{page.cover_source}}</a>.</figcaption>
+                    {{ page.cover_caption }} Photo by <a href="{{page.cover_author_url}}">{{page.cover_author}}</a> on <a href="{{page.cover_source_ulr}}">{{page.cover_source}}</a>.
                 {% endif %}
-            </figure>
+                
+            </div>
             {% endif %}
 
             <section class="post-full-content">
