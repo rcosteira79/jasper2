@@ -448,7 +448,8 @@ The knock-on effect of this is ugly browser-scroll bars at the bottom, so 80px o
 }
 
 .post-card-excerpt {
-    font-family: Georgia, serif;
+    font-family: 'Montserrat', serif;
+    font-weight: 300;
 }
 
 .post-card-meta {
@@ -599,7 +600,7 @@ The first (most recent) post in the list is styled to be bigger than the others 
 }
 
 .post-full-image {
-    margin: 0 -10vw -165px;
+    margin: 0 -10vw;
     height: 800px;
     background: var(--lightgrey) center center;
     background-size: cover;
@@ -608,7 +609,7 @@ The first (most recent) post in the list is styled to be bigger than the others 
 
 @media (max-width: 1170px) {
     .post-full-image {
-        margin: 0 -4vw -100px;
+        margin: 0 -4vw;
         height: 600px;
         border-radius: 0;
     }
@@ -625,7 +626,7 @@ The first (most recent) post in the list is styled to be bigger than the others 
     margin: 0 auto;
     padding: 70px 100px 0;
     min-height: 230px;
-    font-family: Georgia, serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 2.2rem;
     line-height: 1.6em;
     background: #fff;
@@ -643,12 +644,12 @@ The first (most recent) post in the list is styled to be bigger than the others 
 }
 
 .post-full-content:before {
+    display: none;
     content: "";
     position: absolute;
     top: 15px;
     left: -5px;
     z-index: -1;
-    display: block;
     width: 20px;
     height: 200px;
     background: rgba(39,44,49,0.15);
@@ -657,12 +658,12 @@ The first (most recent) post in the list is styled to be bigger than the others 
 }
 
 .post-full-content:after {
+    display: none;
     content: "";
     position: absolute;
     top: 15px;
     right: -5px;
     z-index: -1;
-    display: block;
     width: 20px;
     height: 200px;
     background: rgba(39,44,49,0.15);
@@ -920,7 +921,7 @@ Usage (In Ghost editor):
     padding: 1em 0 1.5em;
     border: 0;
     color: var(--blue);
-    font-family: Georgia,serif;
+    font-family: 'Montserrat',serif;
     font-size: 3.2rem;
     line-height: 1.35em;
     text-align: center;
@@ -1615,7 +1616,7 @@ Usage (In Ghost editor):
     justify-content: center;
     align-items: center;
     margin: 0 0 10px 0;
-    font-family: Georgia, serif;
+    font-family: 'Montserrat', serif;
     font-style: italic;
 }
 
@@ -1754,7 +1755,7 @@ Usage (In Ghost editor):
 .subscribe-overlay-description {
     margin: 0 auto 50px;
     max-width: 650px;
-    font-family: Georgia, serif;
+    font-family: 'Montserrat', serif;
     font-size: 3rem;
     line-height: 1.3em;
     font-weight: 300;
