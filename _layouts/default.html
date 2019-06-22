@@ -69,9 +69,8 @@
       {% if paginator.total_posts > site.paginate %} {% if page.class ==
       'home-template' %} {% include post_pagination.html %} {% elsif page.class
       == 'page-template' %} {% include post_pagination.html %} {% elsif
-      page.class == 'author-template' %} {% include author_pagination.html %} {%
-      elsif page.class == 'tag-template' %} {% include tag_pagination.html %} {%
-      else %} {% include post_pagination.html %} {% endif %} {% endif %}
+      page.class == 'tag-template' %} {% include tag_pagination.html %} {% else
+      %} {% include post_pagination.html %} {% endif %} {% endif %}
 
       <!-- The footer at the very bottom of the screen -->
       <footer class="site-footer outer">
