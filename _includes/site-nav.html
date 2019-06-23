@@ -32,6 +32,33 @@
         >{% include linkedin.html %}</a
       >
       {% endif %}
+      {% if site.stackoverflow %}
+      <a
+        class="social-link social-link-stackoverflow"
+        href="https://stackoverflow.com/users/{{ site.stackoverflow }}"
+        target="_blank"
+        rel="noopener"
+        >{% include stackoverflow.html %}</a
+      >
+      {% endif %}
+      {% if site.medium %}
+      <a
+        class="social-link social-link-medium"
+        href="https://medium.com/@{{ site.medium }}"
+        target="_blank"
+        rel="noopener"
+        >{% include medium.html %}</a
+      >
+      {% endif %}
+      {% if site.devto %}
+      <a
+        class="social-link social-link-devto"
+        href="https://dev.to/{{ site.devto }}"
+        target="_blank"
+        rel="noopener"
+        >{% include devto.html %}</a
+      >
+      {% endif %}
     </div>
     {% if site.subscribers %}
     <a class="subscribe-button" href="#subscribe">Subscribe</a>

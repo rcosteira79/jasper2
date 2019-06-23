@@ -8,6 +8,7 @@ cover_author_url: https://unsplash.com/@bwtobias
 cover_source: Unsplash
 cover_source_url: https://unsplash.com
 navigation: True
+comments: True
 title: Encapsulate and abstract for future proof software
 subtitle: Change is coming
 date: 2019-04-22 10:00:00

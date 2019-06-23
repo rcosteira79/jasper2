@@ -7,6 +7,7 @@ cover_author_url: https://unsplash.com/@heidi_sandstrom
 cover_source: Unsplash
 cover_source_url: https://unsplash.com
 navigation: True
+comments: True
 title: How not to use sealed classes and LiveData for state management
 subtitle: A journey about things that don’t work
 date: 2019-05-28 10:00:00

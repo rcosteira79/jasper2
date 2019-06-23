@@ -3,14 +3,17 @@ layout: page
 current: about
 title: About
 navigation: true
-logo: "assets/images/ghost.png"
 class: page-template
 subclass: "post page"
 ---
 
 ## Me
 
+<img style="float: right; padding: 5px" src="../assets/images/about-me.JPG">
+
 Hi! I'm Ricardo. I'm a software engineer from Portugal, currently living in the magical city of Coimbra (the one pictured in the home page). I'm shy at first and have a natural resting bitch face, but when you talk to me you'll soon find out that I'm actually nice and funny (I'm way too proud of my sense of humor).
+
+<br/>
 
 I've done practically everything in software: from backend to frontend, from data-centric security to developing apps for aging people that don't even have the notion of what is a "button" in terms of an application. I've seen some sh\*t, but ever since I found about it years ago (back in the ICS days), Android is my one true love.
 
