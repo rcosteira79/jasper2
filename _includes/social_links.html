@@ -1,0 +1,49 @@
+{% if site.github %}
+<a
+  class="social-link social-link-gh"
+  href="https://github.com/{{ site.github }}"
+  target="_blank"
+  rel="noopener"
+  >{% include github.html %}</a
+>
+{% endif %} {% if site.twitter %}
+<a
+  class="social-link social-link-tw"
+  href="https://twitter.com/{{ site.twitter }}"
+  target="_blank"
+  rel="noopener"
+  >{% include twitter.html %}</a
+>
+{% endif %} {% if site.linkedin %}
+<a
+  class="social-link social-link-lkd"
+  href="https://linkedin.com/in/{{ site.linkedin }}"
+  target="_blank"
+  rel="noopener"
+  >{% include linkedin.html %}</a
+>
+{% endif %} {% if site.stackoverflow %}
+<a
+  class="social-link social-link-stackoverflow"
+  href="https://stackoverflow.com/users/{{ site.stackoverflow }}"
+  target="_blank"
+  rel="noopener"
+  >{% include stackoverflow.html %}</a
+>
+{% endif %} {% if site.medium %}
+<a
+  class="social-link social-link-medium"
+  href="https://medium.com/@{{ site.medium }}"
+  target="_blank"
+  rel="noopener"
+  >{% include medium.html %}</a
+>
+{% endif %} {% if site.devto %}
+<a
+  class="social-link social-link-devto"
+  href="https://dev.to/{{ site.devto }}"
+  target="_blank"
+  rel="noopener"
+  >{% include devto.html %}</a
+>
+{% endif %}
