@@ -19,7 +19,7 @@ I’ve done a lot of stuff in software: from backend to frontend, from data-cent
 
 As a developer, I:
 
-- Think that the best software is the one that works;
+- Think that software that works is good, but software that works **and** is also readable by a human is the best;
 - Understand that **technical debt** is the second constant in software development (**change** being the first);
 - Am used to work with both legacy code (AsyncTasks, anyone?) and hip new tech that kids use these days (Rx, Jetpack, DI frameworks, etc);
 - Love Kotlin (but remember Java for all good things it did for me, in spite of all the bad ones);
