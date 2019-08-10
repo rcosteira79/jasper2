@@ -235,7 +235,7 @@ Although redrawing the whole UI seems exaggerated, the process is actually very 
 
 You can find all the code (in its final state) in my [multi module clean architecture template](https://github.com/rcosteira79/AndroidMultiModuleCleanArchTemplate), in the `RecyclerViewExample` module.
 
-As I said before, this is not an architecture recommendation. While this might work for some cases, other alternatives such as databinding or multiple LiveData variables managed by a MediatorLiveData (as suggested by Gabor Varadi in the comments) might even be a better fit. I’m a fan of this approach, but it’s up to you to figure out what’s best for your specific case.
+As I said before, this is not an architecture recommendation. While this might work for some cases, other alternatives such as databinding or multiple LiveData variables managed by a MediatorLiveData ([as suggested by Gabor Varadi](https://medium.com/@Zhuinden/if-there-are-many-events-id-just-combine-them-together-with-a-mediatorlivedata-or-with-rx-a0494953a578)) might even be a better fit. I’m a fan of this approach, but it’s up to you to figure out what’s best for your specific case.
 
 ---
 

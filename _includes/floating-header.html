@@ -32,6 +32,17 @@
     >
       {% include facebook.html %}
     </a>
+    <a
+      class="floating-header-share-lkd"
+      href="https://www.linkedin.com/shareArticle/?mini=true&url={{
+        site.url
+      }}{{ page.url }}
+        &title={{ page.title }}
+        &source={{ site.url }}"
+      onclick="window.open(this.href, 'share-linkedin','width=500,height=500');return false;"
+    >
+      {% include linkedin.html %}
+    </a>
   </div>
   <progress class="progress" value="0">
     <div class="progress-container">
