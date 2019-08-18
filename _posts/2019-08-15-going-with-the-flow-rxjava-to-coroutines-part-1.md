@@ -9,7 +9,7 @@ cover_source: Unsplash
 cover_source_url: https://unsplash.com
 navigation: True
 comments: True
-title: "Going with the Flow: RxJava to Coroutines - Part 1"
+title: "Going with the Flow: RxJava to coroutines - Part 1"
 subtitle: "Refactoring an API request"
 date: 2019-08-15 10:00:00
 tags: [Android]
@@ -19,9 +19,9 @@ author: ricardo
 published: True
 ---
 
-In the last couple of weeks, I've been playing around with Kotlin coroutines. I had some trouble wrapping my head around the whole concept, mainly because I was consistently looking out for RxJava resemblances. Well, the truth is RxJava is one thing, and coroutines are another thing. Sure, they can be used for the same use cases, but they're two different concepts. I'll try not to go too deep into the rabit hole here, but RxJava is an API for asynchronous and/or concurrent programming that follows the **functional** and **reactive** paradigms. On the other hand, the coroutines library aims to facilitate asynchronous and/or concurrent programming, while **deferring the decision of going functional or reactive to the user**. Once I became aware of this, coroutines became a lot easier to understand. This also means that they're easier to grasp for beginners, or just someone that's not familiarized with RxJava.
+I've been playing around with Kotlin's coroutines library. I had some trouble wrapping my head around the whole coroutine concept, mainly because I was consistently looking out for RxJava resemblances. Well, the truth is RxJava is one thing, and coroutines are another thing. Sure, they can be used for the same use cases, but they're two different concepts. I'll try not to go too deep into the rabit hole here, but RxJava is an API for asynchronous and/or concurrent programming that follows the **functional** and **reactive** paradigms. On the other hand, the coroutines library aims to facilitate asynchronous and/or concurrent programming, while **deferring the decision of going functional or reactive to the user**. Once I became aware of this, coroutines became a lot easier to understand. And it took me a lot less time than RxJava. I dare say that this might mean they're easier to grasp for beginners, or at least to someone that's not familiarized with RxJava.
 
-In this article series, I will go through a sample app built with RxJava and refactor it to use coroutines. I will show you both implementations and explain the reasoning behind them. I will measure performance (I'm an Engineer™) and show you how can you write tests for both versions. In this article, I'll start with the refactoring that, in my opinion, lays the foundation to understand the upcoming ones - the refactoring of a Retrofit-powered API request. So, let's get started.
+In this article series, I'll go through a sample app built with RxJava and refactor it using the coroutines library. I will show you both implementations and explain the reasoning behind them. I will measure performance (I'm an Engineer™) and show you how can you write tests for both versions. In this article, I'll start with the refactoring that, in my opinion, lays the foundation to understand the upcoming ones - refactoring of an API request with coroutines (if you came for Flows, I will talk about them in this series, but not in this article. Sorry!). So, let's get started.
 
 ### The app
 
@@ -34,11 +34,11 @@ Well, more like "The view". I didn't want to show you just small "before" and "a
 
 The UI is composed by a `Fragment` with a search bar and a `RecyclerView` (don't mind the `BottomNavigationView`, it's there just so that I can jump between different code samples - this is my skeleton/playground project). Each `RecyclerView` item shows a card with user information. When the app starts, it checks the database for existing data, and displays it accordingly. It also queries the Github API for more data in order to update the database. The search bar filters the user list by name, and the _DELETE_ button on each card sends a delete command to the database for the corresponding user.
 
-I'm using Room for the database and, as mentioned before, Retrofit for the Github API requests. Dependencies are provided by Dagger. The app as a whole is built using a common pattern ([Clean Architecture](http://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)). State management is managed through view state and view events classes. Data flow between the view and the `ViewModel` is unidirectional. If you want to know more about the implementation details, you can check the [repository](https://github.com/rcosteira79/AndroidMultiModuleCleanArchTemplate). That said, let us dive into the API request details.
+I'm using Room for the database and Retrofit for the Github API requests. Dependencies are provided by Dagger. The app as a whole is built using a common pattern ([Clean Architecture](http://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)). State is managed through view state and view event classes. Data flow between the view and the `ViewModel` is unidirectional. If you want to know more about the implementation details, you can check the [repository](https://github.com/rcosteira79/AndroidMultiModuleCleanArchTemplate). That said, let's dive into the API request details.
 
 ### Handling an API request with RxJava
 
-So, in order to compose that UI we need to fetch the users from the Github API. However, some of the information that we want to show just as the location or the blog url are not available in the list that the API returns. As such, we need to do another request - one for **each** user - to retrieve more details.
+To fetch the users we need to contact the Github API. However, some of the information we want to show, such as location or blog url, are not available in the list that the API returns. As such, we need to do another request - one for **each** user - to retrieve those details.
 
 Given this, the app has the following Retrofit API:
 
@@ -52,7 +52,7 @@ interface Api {
 }
 ```
 
-Yes, I could use `Observable` instead of `Maybe` here, but `Maybe` makes more _semantic_ meaning to me: maybe I will get the response I expect, or maybe I wont. Still, `Observable` is more versatile than `Maybe`. Not only that, but `getAllUsers` returns a `List<GithubUser>` stream, and we need to operate on each individual user. So the **repository** converts this stream into an `Observable` stream of `GithubUser`. The other stream remains the same (for now):
+Yes, I could use `Observable` instead of `Maybe` here, but `Maybe` makes more _semantic_ meaning to me: maybe I'll get the response I expect, or maybe I won't. Still, `getAllUsers` returns a `List<GithubUser>` stream, and we need to operate on each individual user. So the **repository** converts this stream into an `Observable` stream of `GithubUser`. The other stream remains the same:
 
 ```Kotlin
 override fun getUsersFromApi(): Observable<User> {
@@ -67,7 +67,7 @@ override fun getUserDetailsFromApi(username: Username): Maybe<DetailedUser> {
 }
 ```
 
-Following Clean Architecture, I have `UseCase` classes connecting the `ViewModel` to the repository. Regardless, I'm skipping them here since I'm only using them to define the boundary, i.e., they just forward the calls from the `ViewModel` to the repository. This is actually something that bothers me, because according to the Clean Architecture definition, a use case should contain the business logic. On Android though, we tend to keep the business logic both in the repository and the `ViewModel` (at least in most Clean Architecture implementations I've seen so far). In other words, the `UseCase` classes are practically useless, doing nothing more than defining a boundary. Maybe they don't make any sense at all, since most of the work done by an Android app is fetching data from wherever and showing it on the screen. Anyway, this is a subject for another article, maybe. Back to the refactoring.
+Following Clean Architecture, I have `UseCase` classes connecting the `ViewModel` to the repository. Regardless, I'm skipping them here since I'm only using them to define the boundary, i.e., they just forward the calls from the `ViewModel` to the repository. This is actually something that bothers me, because according to the Clean Architecture definition, a use case is called a "use case" because it encapsulates use case logic. On Android though, we tend to keep the this logic both in the repository and the `ViewModel` (at least in most Clean Architecture implementations I've seen so far). In other words, the `UseCase` classes are practically useless, doing nothing more than defining a boundary. Maybe they don't make any sense at all, since most of the work done by an Android app is fetching data from wherever and showing it on the screen. Anyway, this is a subject for another article, maybe. Back to the refactoring.
 
 So, the API is ready, and the repository is ready. Now we just need to make the call in the `ViewModel`, and subscribe to it:
 
@@ -245,8 +245,4 @@ At a first sight, there's a lot to explain here. Lets begin:
 - Right below, we have a `map` that is receiving a `Deferred<DetailedUser>`. This is the return type of each of the `async` calls. We can then `await` on these `Deferred` values until they all finish. In the end, both this `map` and the one with the `async` calls mimic what an Rx's `flatMap` would do;
 - That's it. The rest is just sequential, normal code. However, a side note on this. `updateCachedUsers` is a call that gets propagated through the repository until it calls Room to actually update itself with the new data. Now, the caveat: if the actual Room function was a `suspend` function, this `updateCachedUsers` call above would have to be out the `withContext` block, and be executed in the main thread. As it turns out, Room `suspend` functions are **main-safe**, as it uses its own custom `Dispatcher` - calling it from any other thread other that main will only slow things down.
 
-Ok, the code is up and running, everything seems to be working. Onto testing.
-
-### Testing
-
-When it comes to testing, I'm all about the idea that **we should test behavior, not implementation details** (check [this nice article](https://medium.com/pleasework/what-is-a-unit-b833bc4f99e5) about testing by [Danny Preussler](https://twitter.com/PreusslerBerlin)). For this app, this would mean testing the `ViewModel` (more specifically, the use cases) and treating anything below it as a black box. Regardless, for the sake of this article, we'll test both our implementations.
+### My thoughts
