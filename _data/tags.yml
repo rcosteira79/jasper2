@@ -1,4 +1,8 @@
 android:
   name: android
-  description: Posts about Android development
+  description: Posts about Android development.
   cover: assets/images/android-tag-cover.jpg
+talks:
+  name: talks
+  description: Posts about my talks at meetups and conferences.
+  cover: assets/images/talk-devfest-leiria-3.jpg

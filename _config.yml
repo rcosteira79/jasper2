@@ -6,14 +6,14 @@ kramdown:
     disable: true
 paginate: 100 # it will paginate after this number
 language: "en-uk"
-words_per_minute: 200
+words_per_minute: 300
 
 # edit baseurl to simply '/' if using as your personal page (instead of a project page)
 baseurl: /
 
 # Website info
 title: Ricardo Costeira
-description: A mobile software engineer with a passion for Android and clean, maintainable code. I build apps from the ground up and maintain existing ones. Currently out of my area of expertise in order to diversify my skills on software design and architecture.
+description: A mobile software engineer with a passion for Android and clean, maintainable code. I build apps from the ground up and maintain existing ones.
 picture: assets/images/me.jpg
 cover: assets/images/cover.jpeg
 logo_dark: assets/images/favicon.png

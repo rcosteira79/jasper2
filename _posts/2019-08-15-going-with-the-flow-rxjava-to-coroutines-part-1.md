@@ -204,7 +204,7 @@ private fun updateCacheWithCoroutines() {
 private suspend fun getUsersFromApiThroughCoroutine(coroutineScope: CoroutineScope) {
   val userList = getUsersFromApi(NoParameters()) // List<User>
     .take(10) // Github API has a hourly call limit :D and 10 are more than enough for what we're doing
-    .map { coroutineScope.async { getUserDetailsFromApi(it.username) } } // Yay concurrency!
+    .map { coroutineScope.async { getUserDetailsFromApi(it.username) } } // Yay parallelism!
     .map { it.await() } // Wait for them to finish... These two last maps are pretty much a flatMap
 
   if (userList.isNotEmpty()) {
@@ -267,7 +267,7 @@ Lets begin:
 
 This concludes the part 1 of this series. I wanted to include both testing and performance measurements for this refactoring in this article as well, but damn, this is already huge as it is. That said, in part 2 I'll be writing about how can you unit test both implementations (although I don't agree that you should in this specific case, but I'll explain why in the article) and compare them both in terms of performance. I'm expecting them to be really close to each other in execution time, but I'm rather curious with the memory footprint of each implementation. If I had to bet, I'd say that RxJava is heavier on memory usage, but we'll see.
 
-As for RxJava vs. coroutines... Well, as I said in the begining, you really can't compare two different things. The only thing I can say right now is that both are really fun to use, and if your RxJava use case is one where you only use it for network calls **and you're looking for an alternative**, you should totally consider coroutines.
+As for RxJava vs. coroutines... Well, as I said in the beginning, you really can't compare two different things. The only thing I can say right now is that both are really fun to use, and if your RxJava use case is one where you only use it for async work **and you're looking for an alternative**, you should totally consider coroutines.
 
 <hr>
 

@@ -15,7 +15,7 @@ Hi! I'm Ricardo. I'm a software engineer from Portugal, currently living in the 
 
 <br/>
 
-I’ve done a lot of stuff in software: from backend to frontend, from data-centric security to developing apps for aging people that don't even have the notion of what is a "button" in terms of an application. I’ve seen some sh\*t, but ever since I found about Android years ago (back in the ICS days), it became my one true love.
+I’ve done a lot of stuff in software: from backend to frontend, from data-centric security to developing apps for aging people that don't even have the notion of what a "button" is in terms of an application. I’ve seen some sh\*t, but ever since I found about Android years ago (back when ICS was released), it became my one true love.
 
 As a developer, I:
 
