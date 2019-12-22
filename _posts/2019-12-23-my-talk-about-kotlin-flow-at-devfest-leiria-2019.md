@@ -11,7 +11,7 @@ navigation: True
 comments: True
 title: "My Talk About Kotlin Flow at DevFest Leiria 2019"
 subtitle:
-date: 2019-12-22 10:00:00
+date: 2019-12-23 10:00:00
 tags: [Android, Talks]
 class: post-template
 subclass: "post tag-android tag-talks"
