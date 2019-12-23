@@ -6,3 +6,7 @@ talks:
   name: talks
   description: Posts about my talks at meetups and conferences.
   cover: assets/images/talk-devfest-leiria-3.jpg
+reactive-programming:
+  name: reactive-programming
+  description: Posts about reactive programming.
+  cover: assets/images/reactive-programming-tag-cover.jpg

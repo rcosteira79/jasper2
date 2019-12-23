@@ -9,7 +9,7 @@ cover_source:
 cover_source_url:
 navigation: True
 comments: True
-title: "My Talk About Kotlin Flow at DevFest Leiria 2019"
+title: "My talk about Kotlin Flow at DevFest Leiria 2019"
 subtitle:
 date: 2019-12-23 10:00:00
 tags: [Android, Talks]
