@@ -11,7 +11,7 @@ navigation: True
 comments: True
 title: "Going with the Flow: RxJava to Coroutines - Part 2"
 subtitle: "Testing and measuring the impact of refactoring the API request"
-date: 2019-12-22 10:00:00
+date: 2019-12-25 10:00:00
 tags: [Android]
 class: post-template
 subclass: "post tag-android"

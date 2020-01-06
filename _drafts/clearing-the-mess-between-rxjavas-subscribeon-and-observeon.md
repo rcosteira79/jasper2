@@ -11,7 +11,7 @@ navigation: True
 comments: True
 title: "Clearing the mess between RxJava's subscribeOn and observeOn"
 subtitle: "How to synergize the strengths of both schedulers"
-date: 2019-12-22 10:00:00
+date: 2019-12-24 10:00:00
 tags: [Android, Reactive Programming]
 class: post-template
 subclass: "post tag-android tag-reactive-programming"
@@ -27,9 +27,26 @@ This article aims to demystify the usage of both schedulers by going step by ste
 
 In my opinion, RxJava's documentation is really well written. Well enough to get you started, at least. If you check the documentation's [Scheduler section](http://reactivex.io/documentation/scheduler.html), the pretty picture below will catch your attention immediately:
 
-<div class="post-image-in-article-body">
 <figure>
-  <img src="{{site.url}}/assets/images/clearing-the-mess-between-rxjavas-subscribeon-and-observeon-1.png" alt="Context switching between schedulers" />
+  <img 
+    class="post-image-in-article-body" 
+    src="{{site.url}}/assets/images/clearing-the-mess-between-rxjavas-subscribeon-and-observeon-2.png" 
+    alt="Context switching between schedulers" />
   <figcaption>Context switching between schedulers.</figcaption>
 </figure>
-</div>
+
+The colored downward arrows tell us in which thread the code is flowing on. But before going into that, it's best to clarify what `observeOn` and `subscribeOn` does:
+
+- **subscribeOn**: Schedules the **whole Observable** to run on the specified thread.
+- **observeOn**: Schedules the **downstream** to run on the specified thread. In other words, it only affects operations that run **after** it is called.
+
+With this in mind, let's look at the image. The first scheduling operator called is `observeOn()
+
+### Getting our hands dirty
+
+<!-- observeOn
+subscribeOn
+subscribeon -> observeOn
+observeOn -> subscribeOn
+subscribeOn -> subscribeOn -> observeOn
+observeOn -> observeOn -> subscribeOn -> observeOn -->
