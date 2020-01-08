@@ -684,24 +684,6 @@ The first (most recent) post in the list is styled to be bigger than the others 
   }
 }
 
-.post-image-in-article-body {
-  align-content: center;
-  position: relative;
-  align-items: center;
-  width: 40vw;
-}
-
-@media (max-width: 1170px) {
-  .post-image-in-article-body {
-    width: 75vw;
-  }
-}
-@media (max-width: 800px) {
-  .post-image-in-article-body {
-    width: 90vw;
-  }
-}
-
 /* 
 .post-full-content:before {
     display: none;
