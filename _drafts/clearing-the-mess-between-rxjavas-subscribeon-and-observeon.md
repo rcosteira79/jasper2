@@ -25,24 +25,33 @@ This article aims to demystify the usage of both schedulers by going step by ste
 
 ### Documentation is your friend
 
-In my opinion, RxJava's documentation is really well written. Well enough to get you started, at least. If you check the documentation's [Scheduler section](http://reactivex.io/documentation/scheduler.html), the pretty picture below will catch your attention immediately:
+In my opinion, RxJava's documentation is really well written. Well enough to get you started, at least. If you check the documentation's [Scheduler section](http://reactivex.io/documentation/scheduler.html), a picture similar to the one below will catch your attention immediately:
 
 <figure>
   <img 
     class="post-image-in-article-body" 
-    src="{{site.url}}/assets/images/clearing-the-mess-between-rxjavas-subscribeon-and-observeon-2.png" 
+    src="{{site.url}}/assets/images/clearing-the-mess-between-rxjavas-subscribeon-and-observeon-2.jpg" 
     alt="Context switching between schedulers" />
   <figcaption>Context switching between schedulers.</figcaption>
 </figure>
 
-The colored downward arrows tell us in which thread the code is flowing on. But before going into that, it's best to clarify what `observeOn` and `subscribeOn` does:
+Each horizontal arrow with the little balls represent a stream, and each rectangle represents an operation on the stream above it. The downward arrows depict the events that get passed from stream to stream.
+The original picture uses colors to represent the different threads. I'm also using colors here, but decided to swap the colored triangles inside the scheduling operators with colored numbers. I also added the numbers to the right of the downward arrows, and right side of the operators. The image has more information now, but it seems easier to reason about. For me, at least. Anyway, the numbers tell us in which thread the code is flowing on. But before going into that, it's best to clarify what `observeOn` and `subscribeOn` does:
 
 - **subscribeOn**: Schedules the **whole Observable** to run on the specified thread.
 - **observeOn**: Schedules the **downstream** to run on the specified thread. In other words, it only affects operations that run **after** it is called.
 
-With this in mind, let's look at the image. The first scheduling operator called is `observeOn()
+With this in mind, let's look at the image. It has four operators, three of them being thread scheduling ones. We can see an `observeOn(1)`, followed by a `subscribeOn(2)` and an `observeOn(3)`, in this order.
+
+While `subscribeOn` is supposed to schedule the whole `Observable` to run in thread number two, something different is happening: it's running in thread number one, just like the streams and operators **above it but below the first `observeOn` scheduler**, as well as the streams and operators **below it until after the call of the next operator**.
+
+The reason for this is actually quite simple! The truth is that **`observeOn` operators take precedence over `subscribeOn` operators**. This is why the call to `subscribeOn` is seemingly being ignored here – both `observeOn` operators are taking priority over it. Note that it does, however, schedule the stream before the first `observeOn` to run on thread number two, since there's no other scheduler affecting it (remember that `observeOn` only affects what happens after its call). Another important thing to note is that the events happening after the second `observeOn` call are running on the thread scheduled by this call, which means that **new `observeOn` calls take precedence over old ones**.
+
+This can be surprinsingly hard to grasp, and things can get confusing when we start adding a lot of different `subscribeOn` and `observeOn` operators in our streams. Let's dig in deeper through some code examples.
 
 ### Getting our hands dirty
+
+Let's start with a simple one.
 
 <!-- observeOn
 subscribeOn
