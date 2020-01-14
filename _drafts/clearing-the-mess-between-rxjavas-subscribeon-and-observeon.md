@@ -51,7 +51,31 @@ This can be surprinsingly hard to grasp, and things can get confusing when we st
 
 ### Getting our hands dirty
 
-Let's start with a simple one.
+We'll use a simple helper function that will tell us in which thread the calling code is running:
+
+```Kotlin
+private fun whereAmIRunning() {
+  println("I'm running on thread ${Thread.currentThread().name}")
+}
+```
+
+With that out of the way, let's start with a simple one.
+
+```Kotlin
+Observable.just(whereAmIRunning())
+  .map { whereAmIRunning() }
+  .subscribeOn(Schedulers.io())
+  .observeOn(AndroidSchedulers.mainThread())
+  .subscribe { whereAmIRunning() }
+```
+
+This is the most common case, at least on Android: you have some processing you want to keep out of the main thread, and then output the final result to it in order to update the UI. This code outputs the following:
+
+```
+I/System.out: I'm running on thread main
+I/System.out: I'm running on thread RxCachedThreadScheduler-1
+I/System.out: I'm running on thread main
+```
 
 <!-- observeOn
 subscribeOn
