@@ -47,7 +47,7 @@ While `subscribeOn` is supposed to schedule the whole `Observable` to run in thr
 
 The reason for this is actually quite simple! The truth is that **`observeOn` operators take precedence over `subscribeOn` operators**. This is why the call to `subscribeOn` is seemingly being ignored here – both `observeOn` operators are taking priority over it. Note that it does, however, schedule the stream before the first `observeOn` to run on thread number two, since there's no other scheduler affecting it (remember that `observeOn` only affects what happens after its call). Another important thing to note is that the events happening after the second `observeOn` call are running on the thread scheduled by this call, which means that **new `observeOn` calls take precedence over old ones**.
 
-This can be surprinsingly hard to grasp, and things can get confusing when we start adding a lot of different `subscribeOn` and `observeOn` operators in our streams. Let's dig in deeper through some code examples.
+This can be surprisingly hard to grasp, and things can get confusing when we start adding a lot of different `subscribeOn` and `observeOn` operators in our streams. Let's dig in deeper through some code examples.
 
 ### Getting our hands dirty
 
@@ -93,7 +93,7 @@ I/System.out: I'm a map running on thread RxCachedThreadScheduler-3
 I/System.out: I'm a subscriber running on thread RxCachedThreadScheduler-3
 ```
 
-With both `map` and the subscription running on a thread from the IO pool. If you're wondering why `just` still ran on the calling thread, its because that's how `just` works: it always runs immediately – even before a subscription – and on the calling thread. For this reason, it's also worth noting that you shouldn't use it to convert expensive operations to `Observable`s, as RxJava's execution **is blocking by default**. In this case, for instance, it would block the main thread.
+With both `map` and the subscription running on a thread from the IO pool. If you're wondering why `just` still ran on the calling thread, its because that's how `just` works: it always runs immediately – even without a subscription – and on the calling thread. For this reason, it's also worth noting that you shouldn't use it to convert expensive operations to `Observable`s, as RxJava's execution **is blocking by default**. In this case, for instance, it would block the main thread.
 
 So, while trying not to get too out of scope here, let me just say that for the cases when you need the `Observable` creation to be deferred to another thread, you can use something like `fromCallable`. This `Observable` creation factory method only gets triggered whenever there's a subscription. So if we change the above code to
 
@@ -111,6 +111,8 @@ I/System.out: I'm a fromCallable on thread RxCachedThreadScheduler-1
 I/System.out: I'm a map on thread RxCachedThreadScheduler-1
 I/System.out: I'm a subscriber on thread RxCachedThreadScheduler-1
 ```
+
+There are other methods similar to `fromCallable` but, again, I don't want to get too out of scope here.
 
 <!-- This is the most common case, at least on Android: you have some processing you want to keep out of the main thread, and then output the final result to it in order to update the UI. This code outputs the following: -->
 
