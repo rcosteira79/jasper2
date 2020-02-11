@@ -19,15 +19,66 @@ author: ricardo
 published: true
 ---
 
-A few days ago, I worked on a sample project for a tutorial. It was a very simple app: a list of images, where you could click any image to the it in full screen. The code was simple, well structured, did what it had to do, and did it well. There was only one problem: the `RecyclerView` responsible for showing the image list was not retaining its state, i.e., its scroll position, when you came back to it after checking an image in full screen.
+A few days ago, I worked on a sample project for a tutorial. It was a very simple app: a list of images, where you could click any image to the it in full screen. The code was simple, well structured, did what it had to do, and did it well. There was only one problem: the `RecyclerView` responsible for showing the image list was resetting its state, i.e., its scroll position, when you came back to it after checking an image in full screen.
 
 ## A few things about RecyclerViews
 
-Well, this can't be right... I'm doing everything I'm supposed to do in order for the `RecyclerView` to be able to retain its scroll position! It's actually quite simple to do. You just have to make sure that:
+Well, this can't be right... I'm doing everything I'm supposed to do in order for the `RecyclerView` to be able to retain its scroll position! Given the huge amount of code samples online explaining how to manually save and restore `RecyclerView` state, it seems that a lot of people think that this isn't supposed to happen automatically. Well, it is, and it's actually quite simple to do. You just have to make sure that:
 
 1. The `RecyclerView` has an ID.
 2. You setup the `Adapter` with all the data **before** the `RecyclerView` goes through its first layout pass.
 
-The first one is simple: you just go to the layout and add an ID to the `RecyclerView`. This one's hard to miss since you're probably using an ID to access the view in the code.
+The first one is simple: you just go to the layout and add an ID to the `RecyclerView`. By default, if a `View` doesn't have an ID, its state [won't be stored](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/android10-c2f2-release/core/java/android/view/View.java#20264). This one's actually hard to miss since you're probably using an ID to access the view in the code.
 
-The second one is trickier.
+The second one is trickier. It's not only a matter of setting up the `Adapter` before the `RecyclerView`. You need to make sure that when the `RecyclerView` is about to go through that first layout pass, it already has **all the data** it needs. If the layout pass starts and the `Adapter` doesn't have the same data or is empty, the `RecyclerView`'s scroll position will get reset, as its state will be invalidated. So, for instance, if an app displaying a `RecyclerView` undergoes a config change and has to send an API request for data, it'll be next to impossible for the response to arrive in time for the layout pass, which means that the `RecyclerView`'s scrolling position will inevitably be reset to the initial position.
+
+The solution here is simple: just cache the data. For example, if you have all the data cached in a `LiveData`, something like this will work:
+
+```Kotlin
+override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    val view = inflater.inflate(R.layout.fragment_list, container, false)
+
+    val myAdapter = createAdapter()
+
+    setupRecyclerView(view, myAdapter)
+    observeViewModel(myAdapter)
+
+    return view
+  }
+
+private fun setupRecyclerView(view: View, myAdapter: MyAdapter) {
+  view.recyclerView.adapter = myAdapter
+
+  // Other settings like listeners, setHasFixedSize, etc
+}
+
+private fun observeViewModel(myAdapter: MyAdapter) {
+  viewModel.myLiveData.observe(viewLifecycleOwner) {
+    myAdapter.submitList(it)
+  }
+}
+```
+
+By the time the `RecyclerView` starts getting drawn, the data is more than ready.
+
+## Hello darkness my old friend
+
+> "What am I missing?!"
+
+This was the question I asked myself for three days. My `RecyclerView` had an ID, and my data was cached and ready on time, so what could be wrong?
+
+I tried everything I could think of. Removing`setHasFixedSize(true)` from the `RecyclerView` setup, removing animations, setting things up in different lifecycle methods and in different combinations, persisting everything... I even saved and restored the state manually at one point, but was not happy at all with the result. Going through the `RecyclerView`'s code, I could see that its state was indeed being saved and correctly retrieved, but later invalidated. I hadn't felt this mad at Android for years!
+
+## I can see clearly now, the rain is gone
+
+As I was close to give up on fixing the bug and on my software engineering career in general, I began browsing Slack channels. In one specific channel, I found something that (Jon F Hancock)[https://twitter.com/JonFHancock] said when trying to help someone else with a different `RecyclerView` problem:
+
+> If the size of your RecyclerView depends on its children, you shouldn’t set that to true.
+
+The "that" in the quote refers to `setHasFixedSize(true)`. But the bit that actually caught my attention was the first part: "_If the size of your RecyclerView depends on its children (...)_".
+
+Holy crap. Could it be? I've been looking at the wrong place all along.
