@@ -1,7 +1,7 @@
 ---
 layout: post
 current: post
-cover: assets/images/why-your-recycler-view-is-not-retaining-its-state.jpg
+cover: assets/images/glideing-your-way-into-recyclerview-state-invalidation.jpg
 cover_caption: I have no idea what that says.
 cover_author: Christian Wiediger
 cover_author_url: https://unsplash.com/@christianw
@@ -9,8 +9,8 @@ cover_source: Unsplash
 cover_source_url: https://unsplash.com
 navigation: True
 comments: True
-title: "Why your RecyclerView is not retaining its state"
-subtitle: "And how I almost lost my mind figuring it out"
+title: "Glide'ing your way into RecyclerView state invalidation"
+subtitle: "And Glide'ing your way out too!"
 date: 2020-02-09 10:00:00
 tags: [Android]
 class: post-template
@@ -73,12 +73,34 @@ This was the question I asked myself for three days. My `RecyclerView` had an ID
 
 I tried everything I could think of. Removing`setHasFixedSize(true)` from the `RecyclerView` setup, removing animations, setting things up in different lifecycle methods and in different combinations, persisting everything... I even saved and restored the state manually at one point, but was not happy at all with the result. Going through the `RecyclerView`'s code, I could see that its state was indeed being saved and correctly retrieved, but later invalidated. I hadn't felt this mad at Android for years!
 
-## I can see clearly now, the rain is gone
-
-As I was close to give up on fixing the bug and on my software engineering career in general, I began browsing Slack channels. In one specific channel, I found something that (Jon F Hancock)[https://twitter.com/JonFHancock] said when trying to help someone else with a different `RecyclerView` problem:
+As I was close to give up on fixing the bug and on my software engineering career in general, I began browsing Slack channels. In one specific channel, I found something that [Jon F Hancock](https://twitter.com/JonFHancock) said when trying to help someone else with a different `RecyclerView` problem:
 
 > If the size of your RecyclerView depends on its children, you shouldn’t set that to true.
 
 The "that" in the quote refers to `setHasFixedSize(true)`. But the bit that actually caught my attention was the first part: "_If the size of your RecyclerView depends on its children (...)_".
 
-Holy crap. Could it be? I've been looking at the wrong place all along.
+Holy crap. Could it be?
+
+## I can see clearly now, the rain is gone
+
+What Jon said was related to the `Recyclerview`'s size. However, it got me thinking about the size of the `RecyclerView`'s children.
+
+So, here's the layout for the `RecyclerView` items:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/image_view_image"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:adjustViewBounds="true"
+  android:contentDescription="@null"
+  tools:src="@tools:sample/backgrounds/scenic" />
+```
+
+At a first glance, you probably won't see nothing unusual. And there isn't! However, this seemingly innocent code was masking a nasty bug.
+
+The images that feed the `RecyclerView` come from an image API. The images are random, and **can have completely different heights**. Not only that, there's no telling how many bytes will each image occupy. By setting the `ImageView`'s height to `wrap_content`, I was forcing the `RecyclerView` to
+
+<!-- tentativas com RecyclerView.Adapter e staggeredGridLayout -->
