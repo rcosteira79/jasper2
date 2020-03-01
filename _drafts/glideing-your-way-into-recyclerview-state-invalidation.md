@@ -71,7 +71,7 @@ By the time the `RecyclerView` starts getting drawn, the data is more than ready
 
 This was the question I asked myself for three days. My `RecyclerView` had an ID, and my data was cached and ready on time, so what could be wrong?
 
-I tried everything I could think of. Removing`setHasFixedSize(true)` from the `RecyclerView` setup, removing animations, setting things up in different lifecycle methods and in different combinations, persisting everything... I even saved and restored the state manually at one point, but was not happy at all with the result. Going through the `RecyclerView`'s code, I could see that its state was indeed being saved and correctly retrieved, but later invalidated. I hadn't felt this mad at Android for years!
+I tried everything I could think of. Removing`setHasFixedSize(true)` from the `RecyclerView` setup, removing animations, `RecyclerView.Adapter` instead of `ListAdapter`, `StaggeredGridLayout` instead of `GridLayout`, setting things up in different lifecycle methods and in different combinations, persisting everything... I even saved and restored the state manually at one point, but was not happy at all with the result (UI flickering). Going through the `RecyclerView`'s code, I could see that its state was indeed being saved and correctly retrieved, but later invalidated. I hadn't felt this mad at Android for years!
 
 As I was close to give up on fixing the bug and on my software engineering career in general, I began browsing Slack channels. In one specific channel, I found something that [Jon F Hancock](https://twitter.com/JonFHancock) said when trying to help someone else with a different `RecyclerView` problem:
 
@@ -103,4 +103,4 @@ At a first glance, you probably won't see nothing unusual. And there isn't! Howe
 
 The images that feed the `RecyclerView` come from an image API. The images are random, and **can have completely different heights**. Not only that, there's no telling how many bytes will each image occupy. By setting the `ImageView`'s height to `wrap_content`, I was forcing the `RecyclerView` to
 
-<!-- tentativas com RecyclerView.Adapter e staggeredGridLayout -->
+<!-- Works with placeholder -->
