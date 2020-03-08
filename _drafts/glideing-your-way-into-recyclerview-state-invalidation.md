@@ -99,8 +99,26 @@ So, here's the layout for the `RecyclerView` items:
   tools:src="@tools:sample/backgrounds/scenic" />
 ```
 
-At a first glance, you probably won't see nothing unusual. And there isn't! However, this seemingly innocent code was masking a nasty bug.
+At a first glance, you probably won't see anything unusual. And there isn't! It's a pretty standard setup for an `ImageView`. However, this innocent code was masking a nasty bug.
 
-The images that feed the `RecyclerView` come from an image API. The images are random, and **can have completely different heights**. Not only that, there's no telling how many bytes will each image occupy. By setting the `ImageView`'s height to `wrap_content`, I was forcing the `RecyclerView` to
+The images that feed the `RecyclerView` come from an image API. The images are random, and are loaded by **Glide**. Here's the extension function for image loading:
+
+```Kotlin
+fun ImageView.load(imageAddress: String) {
+  Glide.with(this)
+      .load(imageAddress)
+      .into(this)
+}
+```
+
+Glide is smart enough to cache unmodified data, so it won't keep requesting the images from the API. However, Glide caches the images with their original size, so it will still have to resize them to fit in the `ImageView`. Not only that, but since the xml layout is setting the height for the `ImageView` as `wrap_content`, and Glide is not specifying any default size either, the latter will have to calculate the height of **each** image it loads.
+
+This calculation takes its time, and while Glide is busy with it, the `RecyclerView` is setting up its layout. When it's ready to layout its children, it gets the height of each item so that it knows the space each of them will occupy. The `RecyclerView` reaches this step in a lot less time than Glide takes to be done with the image size calculations. As such, by having the height of the `ImageView` declared as `wrap_content`, its actual measured height **will default to zero** until it's finally displaying an image.
+
+This effectively messes up the whole logic that comes afterwards:
+
+1. The `RecyclerView`uses the scrolling position that comes from the previous state to know from which view it should start displaying the items.
+2. Using the current position and the size of the items, the `RecyclerView` figures out how many more items it can show.
+3. Since the item size is coming out at zero
 
 <!-- Works with placeholder -->
