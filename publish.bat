@@ -13,7 +13,7 @@ echo Copying output to website repo...
 
 REM exclude README.md and the pictures with "original" text in name.
 REM I want the README.md that's already on the site repo, and the pictures are not necessary
-robocopy "./_site" "../rcosteira79.github.io" /e /njh /njs /ndl /nc /ns /np /nfl /xf "README.md" "*-original.*" "publish.bat" 
+robocopy "./_site" "../rcosteira79.github.io" /e /njh /njs /ndl /nc /ns /np /nfl /xf "README.md" "*-original.*" "publish.bat" "publish.sh"
 
 echo Done. Walking into the website's directory...
 

@@ -11,7 +11,7 @@ navigation: True
 comments: True
 title: "Glide'ing your way into RecyclerView state invalidation"
 subtitle: "And Glide'ing your way out too!"
-date: 2020-03-10 10:00:00
+date: 2020-03-09 10:00:00
 tags: [Android]
 class: post-template
 subclass: "post tag-android"
