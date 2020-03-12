@@ -42,15 +42,15 @@ override fun onCreateView(
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val view = inflater.inflate(R.layout.fragment_list, container, false)
+  val view = inflater.inflate(R.layout.fragment_list, container, false)
 
-    val myAdapter = createAdapter()
+  val myAdapter = createAdapter()
 
-    setupRecyclerView(view, myAdapter)
-    observeViewModel(myAdapter)
+  setupRecyclerView(view, myAdapter)
+  observeViewModel(myAdapter)
 
-    return view
-  }
+  return view
+}
 
 private fun setupRecyclerView(view: View, myAdapter: MyAdapter) {
   view.recyclerView.adapter = myAdapter
